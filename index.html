@@ -13,21 +13,97 @@
 <script>
 (function(window,document){
 	var MaskShare = function(targetDom,options){
-		if(!(this instanceof MaskShare))return MaskShare(targetDom,options);
-		this.options = this.extend({
-			imgSrc:'img/mask_1.jpg'
-		},options);
+		// 判断实例化这个函数的方式是 new MaskShare('dom') 还是 MaskShare('dom')，如果是后者也返回前者的方式；
+		// if(!(this instanceof MaskShare)){return MaskShare(targetDom,options);}
+		
+		// 参数合并，初始设置一个imgSrc 当实例化时设置imgSrc时则覆盖初始设置的该参数；
+		// this.options = this.extend({
+		// 	imgSrc:'img/mask_1.jpg'
+		// },options);
 
-		if((typeof targetDom ) === 'string'){
-			this.targetDom = document.querySelector(targetDom);
-		}else{
-			this.targetDom = targetDom;
+		// 判断传入的目标元素是字符串或是dom对象，并根据不同的类型设置this.targetDom；
+		// if((typeof targetDom ) === 'string'){
+		// 	this.targetDom = document.querySelector(targetDom);
+		// }else{
+		// 	this.targetDom = targetDom;
+		// }
+
+		// 创建蒙版元素；
+		// var boxDom = document.createElement('div');
+		// var imgDom = document.createElement('img');
+
+		// 设置蒙版的初始样式；
+		// boxDom.style.cssText = 'display:none;position:absolute;left:0;top:0;width:100%;height:100%;background-color:rgba(0,0,0,0.8);z-index:9999;';
+		// imgDom.style.cssText = 'margin-top:20px; width:100%;';
+	
+		// 判断是否在实例化时设置了蒙版样式；
+		// if(this.options.boxDomStyle){
+		// 	this.setStyle(boxDom,this.options.boxDomStyle);
+		// }
+		// if(this.options.imgDomStyle){
+		// 	this.setStyle(imgdom,this.options.imgDomstyle);
+		// }
+
+		// 重新设置蒙版图片并且将图片元素添加到dom结构中
+		// imgDom.src = this.options.imgSrc;
+		// boxDom.appendChild(imgDom);
+		// this.boxDom = boxDom;
+
+		// 初始化；
+		this.init();
+	};
+	MaskShare.prototype = {
+		// init 执行event 函数；
+		init:function(){
+			this.event();
+		},
+		// extend 合并第二个对象到第一个对象中；
+		extend:function(obj,obj2){
+			for(var k in obj2){
+				obj[k] = obj2[k];
+			}
+			return obj;
+		},
+		// setStyle 设置样式函数；
+		setStyle:function(dom,objStyle){
+			for(var k in objStyle){
+				dom.style[k] = objStyle[k];
+			}
+		},
+		// event 函数；
+		event:function(){
+			var _this = this;
+
+			this.targetDom.addEventListener('click',function(){
+				// 监控点击事件并将蒙版元素添加到dom结构中；
+				document.body.appendChild(_this.boxDom);
+				_this.boxDom.style.display = 'block';
+				_this.options.open && _this.options.open();
+			},false);
+
+			this.boxDom.addEventListener('click',function(){
+				this.style.display = "none";
+				_this.options.close && _this.options.close();
+			},false);
 		}
 	};
-	MaskShare.prototype = {};
 	window.MaskShare = MaskShare;
 }(window,document));
 
-new MaskShare('clickBtn',{});
+MaskShare('.clickBtn',{
+	imgSrc : 'img/mask_1.jpg',
+	boxDomStyle:{
+		opacity:'0.9'
+	},
+	imgDomstyle:{
+		opacity:'0.8'
+	},
+	open:function(){
+		console.log('show');
+	},
+	close:function(){
+		console.log('close');
+	}
+});
 </script>
 </html>
