@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<title>js 封装测试</title>
+</head>
+<body>
+	<div id="main">
+		<button id="clickBtn">点我</button>
+	</div>
+</body>
+<script>
+(function(window,document){
+	var MaskShare = function(targetDom,options){
+		if(!(this instanceof MaskShare))return MaskShare(targetDom,options);
+		this.options = this.extend({
+			imgSrc:'img/mask_1.jpg'
+		},options);
+
+		if((typeof targetDom ) === 'string'){
+			this.targetDom = document.querySelector(targetDom);
+		}else{
+			this.targetDom = targetDom;
+		}
+	};
+	MaskShare.prototype = {};
+	window.MaskShare = MaskShare;
+}(window,document));
+
+new MaskShare('clickBtn',{});
+</script>
+</html>
